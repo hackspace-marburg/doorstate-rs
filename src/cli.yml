@@ -1,0 +1,11 @@
+name: HSMR spaceapi and tuerstatus generator
+version: "0.9b"
+author: Felix Pape <ziemlich@schlechte.info>
+about: Generate up to date spaceapi.json with events from pmwiki and state from mqtt/switch
+args:
+    - wikipath:
+        short: p
+        long: wikipath
+        value_name: PATH
+        help: Path to the pmwiki instance. spaceapi.json will be written here, and the SiteNav and Event files are expected in PATH/wiki.d/
+        takes_value: true
