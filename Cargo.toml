@@ -1,7 +1,7 @@
 [package]
 name = "doorstate-rs"
 version = "0.9.0"
-authors = ["Felix Pape"]
+authors = ["Felix Pape <ziemlich@schlechte.info>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

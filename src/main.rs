@@ -54,12 +54,17 @@ fn main() {
         // State is only changed via MQTT as the handlers above deal with all the rest
         #[cfg(feature = "gpio-support")]
         {
+            println!(
+                "Running with GPIO Support. Expecting switch input on GPIO: {}",
+                settings.switch_pin
+            );
+            #[path = "gpio.rs"]
             mod gpio;
             gpio::switch_handling(settings.switch_pin, &mut client)
                 .expect("Issues during GPIO Handling");
         }
         #[cfg(not(feature = "gpio-support"))]
-        println!("Feature for raspberry pi gpio-support not enabled. Switch detection not possible.\nPlease recompile with active feature");
+        println!("Feature for raspberry pi gpio-support not enabled. Switch detection not possible.\nPlease recompile with feature activated");
     } else {
         // In case no switch pin is given (i.e. this is run on a different system than the switch)
         // simply loop so the threads don't get killed
@@ -164,7 +169,7 @@ fn unixtime_now() -> u64 {
 }
 
 /// Change current hackspace state by sending new state with current time via MQTT
-fn new_door_state(state: bool, mqtt_client: &mut rumqttc::Client) {
+pub fn new_door_state(state: bool, mqtt_client: &mut rumqttc::Client) {
     let new = Tuerstatus {
         door_open: state,
         flti_only: Some(false),
