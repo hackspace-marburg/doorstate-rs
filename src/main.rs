@@ -105,11 +105,11 @@ fn switch_handling(
         input.set_edge(Edge::BothEdges)?;
         let mut poller = input.get_poller()?;
         loop {
-            if Some(value) = poller.poll(1000 * 60 * 60 * 24 * 7)? {
+            if let Some(value) = poller.poll(1000 * 60 * 60 * 24 * 7)? {
                 // This timout can be huge. Button changes can be very infrequent
                 let state = value == 1;
                 new_door_state(state, mqtt_client);
-                println("Tuerstatus is now: {}", state);
+                println!("Tuerstatus is now: {}", state);
             }
         }
     })
