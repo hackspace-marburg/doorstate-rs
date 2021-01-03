@@ -1,7 +1,7 @@
-use spaceapi::{StatusBuilder, Location, Contact, IssueReportChannel, Status};
 use serde::{Deserialize, Serialize};
-use std::path::Path;
+use spaceapi::{Contact, IssueReportChannel, Location, Status, StatusBuilder};
 use std::fs;
+use std::path::Path;
 
 mod wikiparse;
 
@@ -21,26 +21,42 @@ pub fn write_sitenav(wikipath: &Path, tuerstatus: &Tuerstatus) {
             "text=* [[#door]][[Infrastruktur/Door | %25black%25Base: <br />{}%25%25]]\n",
             "time={}"
         ),
-        if tuerstatus.door_open {"%25green%25besetzt"} else {"%25red%25unbesetzt"},
+        if tuerstatus.door_open {
+            "%25green%25besetzt"
+        } else {
+            "%25red%25unbesetzt"
+        },
         tuerstatus.timestamp
     );
     fs::write(
-        format!("{}{}", wikipath.as_os_str().to_str().unwrap(), "/wiki.d/Site.SiteNav"),
-        sitenav
-    ).expect("Error writing wiki.d/Site.SiteNav");
+        format!(
+            "{}{}",
+            wikipath.as_os_str().to_str().unwrap(),
+            "/wiki.d/Site.SiteNav"
+        ),
+        sitenav,
+    )
+    .expect("Error writing wiki.d/Site.SiteNav");
 }
-
 
 pub fn write_spaceapi(wikipath: &Path, tuerstatus: &Tuerstatus) {
     let spaceapi = hsmr_spaceapi(wikipath, tuerstatus).expect("Spaceapi generation failed!");
     fs::write(
-        format!("{}{}", wikipath.as_os_str().to_str().unwrap(), "/spaceapi.json"), // TODO: Make this less shit
-        serde_json::to_string(&spaceapi).unwrap()
-    ).expect("Error writing spaceapi.json");
+        format!(
+            "{}{}",
+            wikipath.as_os_str().to_str().unwrap(),
+            "/spaceapi.json"
+        ), // TODO: Make this less shit
+        serde_json::to_string(&spaceapi).unwrap(),
+    )
+    .expect("Error writing spaceapi.json");
 }
 
 ///  Generate spaceapi json with current events and given tuerstatus
-fn hsmr_spaceapi(wikipath: &Path, tuerstatus: &Tuerstatus) -> Result<Status, Box<dyn std::error::Error>> {
+fn hsmr_spaceapi(
+    wikipath: &Path,
+    tuerstatus: &Tuerstatus,
+) -> Result<Status, Box<dyn std::error::Error>> {
     let mut base = hsmr_state_prefix();
     let events = wikiparse::next_events(wikipath)?;
     for event in events {
@@ -57,20 +73,21 @@ fn hsmr_state_prefix() -> StatusBuilder {
     StatusBuilder::new("[hsmr] - Hackspace Marburg")
         .logo("https://hsmr.cc/logo.svg")
         .url("https://hsmr.cc/")
-        .location(
-            Location { 
-                address: Some("[hsmr] Hackspace Marburg, Rudolf-Bultmann-Strasse 2b, 35039 Marburg, Germany".into()),
-                lat: 50.81615,
-                lon: 8.77851
-            })
-        .contact(
-            Contact {
-                email: Some("mail@hsmr.cc".into()),
-                irc: Some("ircs://irc.hackint.org:6697/#hsmr".into()),
-                ml: Some("public@lists.hsmr.cc".into()),
-                phone: Some("+49 6421 4924981".into()),
-                ..Default::default()
-            })
+        .location(Location {
+            address: Some(
+                "[hsmr] Hackspace Marburg, Rudolf-Bultmann-Strasse 2b, 35039 Marburg, Germany"
+                    .into(),
+            ),
+            lat: 50.81615,
+            lon: 8.77851,
+        })
+        .contact(Contact {
+            email: Some("mail@hsmr.cc".into()),
+            irc: Some("ircs://irc.hackint.org:6697/#hsmr".into()),
+            ml: Some("public@lists.hsmr.cc".into()),
+            phone: Some("+49 6421 4924981".into()),
+            ..Default::default()
+        })
         .add_issue_report_channel(IssueReportChannel::Email)
         .add_issue_report_channel(IssueReportChannel::Ml)
 }
