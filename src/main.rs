@@ -4,7 +4,7 @@ extern crate clap;
 use clap::App;
 use rumqttc::{Client, Incoming, MqttOptions, QoS};
 use rust_pigpio::constants::{GpioMode, Pud};
-use rust_pigpio::{read, set_mode, set_pull_up_down, GpioResult};
+use rust_pigpio::{initialize, read, set_mode, set_pull_up_down, GpioResult};
 
 use std::path::Path;
 use std::sync::{Arc, Mutex};
@@ -95,6 +95,7 @@ fn spawn_event_updater(
 /// Handles button changes
 /// uses polling in a eternal loop.
 fn switch_handling(pin: u32, mqtt_client: &mut rumqttc::Client) -> GpioResult {
+    initialize()?;
     set_pull_up_down(pin, Pud::UP)?;
     set_mode(pin, GpioMode::INPUT)?;
     // Always publish the initial state at startup
