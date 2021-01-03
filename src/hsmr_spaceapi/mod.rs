@@ -12,7 +12,7 @@ pub struct Tuerstatus {
     pub timestamp: u64,
 }
 
-pub fn write_sitenav(wikipath: &Path, tuerstatus: &Tuerstatus) {
+pub fn write_sitenav(wikipath: &Path, tuerstatus: &Tuerstatus) -> std::io::Result<()> {
     let sitenav = format!(
         concat!(
             "version=pmwiki-2.2.53 ordered=1 urlencoded=1\n",
@@ -36,7 +36,6 @@ pub fn write_sitenav(wikipath: &Path, tuerstatus: &Tuerstatus) {
         ),
         sitenav,
     )
-    .expect("Error writing wiki.d/Site.SiteNav");
 }
 
 pub fn write_spaceapi(wikipath: &Path, tuerstatus: &Tuerstatus) {

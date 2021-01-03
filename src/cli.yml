@@ -4,8 +4,32 @@ author: Felix Pape <ziemlich@schlechte.info>
 about: Generate up to date spaceapi.json with events from pmwiki and state from mqtt/switch
 args:
     - wikipath:
-        short: p
+        short: d
         long: wikipath
         value_name: PATH
         help: Path to the pmwiki instance. spaceapi.json will be written here, and the SiteNav and Event files are expected in PATH/wiki.d/
         takes_value: true
+        required: true
+    - broker:
+        short: b
+        long: mqtt_broker
+        value_name: HOSTNAME
+        help: Hostname of the MQTT broker used to exchange door state names
+        takes_value: true
+        required: true
+    - broker_port:
+        short: p
+        long: mqtt_port
+        value_name: PORT
+        help: Portnumber of the MQTT broker. Defaults to 1883.
+    - topic:
+        short: t
+        long: mqtt_topic
+        value_name: TOPIC
+        help: String for setting the used topic with the mqtt broker. Defaults to "door"
+        takes_value: true
+    - switch:
+        short: s
+        long: switch_pin
+        value_name: GPIOPIN
+        help: Number of the GPIO pin where the switch is connected. Is used with Raspberry Pi internal pullup, so should be wired against ground. If dropped GPIO will not be used.

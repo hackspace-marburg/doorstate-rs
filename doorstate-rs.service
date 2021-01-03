@@ -1,0 +1,13 @@
+[Unit]
+Description=Updates spaceapi.json with door state from MQTT and events from pmwiki. Also polls local door switch.
+After=network.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/conf.d/doorstate-rs
+ExecStart=/usr/local/bin/doorstate-rs -d ${pmwikipath} -b ${mqtt_broker} -t ${mqtt_topic} ${additional_flags}
+RestartSec=5
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
