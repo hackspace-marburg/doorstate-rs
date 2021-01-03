@@ -97,32 +97,12 @@ fn switch_handling(
     pin: u32,
     mqtt_client: &mut rumqttc::Client,
 ) -> std::result::Result<(), gpio_cdev::Error> {
-    //let input = Pin::new(pin);
-    //input.with_exported(|| {
-    //    input.set_direction(Direction::High)?;
-    //    input.set_direction(Direction::In)?;
-    //    input.set_edge(Edge::BothEdges)?;
-    //    let mut poller = input.get_poller()?;
-    //    loop {
-    //        // Timout can be huge. Button changes can be very infrequent.
-    //        // loop to ensure it works after timeout (poll is Err in that case)
-    //        // also to capture more than 1 button change
-    //        if let Some(value) = poller.poll(1000 * 60 * 60 * 24 * 7)? {
-    //            // Button is wired between GPIO 17 and GND
-    //            // Since the input is set to 1 above this is a pullup situation
-    //            // Subsequently the switch is triggered when the GPIO value is 0
-    //            let state = value == 0;
-    //            new_door_state(state, mqtt_client);
-    //            println!("Tuerstatus is now: {}", state);
-    //        }
-    //    }
-    //})
-
     let mut chip = Chip::new("/dev/gpiochip0")?;
 
     let pin_line = chip.get_line(pin)?;
+
     for event in pin_line.events(
-        LineRequestFlags::INPUT,
+        LineRequestFlags::OPEN_SOURCE, // LineRequestFlag INPUT wäre ohne pullup, was hier gebraucht wird
         EventRequestFlags::BOTH_EDGES,
         "monitor",
     )? {
