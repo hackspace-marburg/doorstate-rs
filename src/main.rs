@@ -96,9 +96,9 @@ fn spawn_event_updater(
 fn switch_handling(pin: u64, mqtt_client: &mut rumqttc::Client) -> sysfs_gpio::Result<()> {
     let input = Pin::new(pin);
     input.with_exported(|| {
+        input.set_direction(Direction::High)?;
         input.set_direction(Direction::In)?;
         input.set_edge(Edge::BothEdges)?;
-        input.set_value(1)?;
         let mut poller = input.get_poller()?;
         loop {
             // Timout can be huge. Button changes can be very infrequent.
