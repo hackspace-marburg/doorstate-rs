@@ -2,8 +2,9 @@
 extern crate clap;
 
 use clap::App;
-use gpio_cdev::*;
 use rumqttc::{Client, Incoming, MqttOptions, QoS};
+use rust_pigpio::constants::{GpioMode, Pud};
+use rust_pigpio::{read, set_mode, set_pull_up_down, GpioResult};
 
 use std::path::Path;
 use std::sync::{Arc, Mutex};
@@ -93,22 +94,22 @@ fn spawn_event_updater(
 
 /// Handles button changes
 /// uses polling in a eternal loop.
-fn switch_handling(
-    pin: u32,
-    mqtt_client: &mut rumqttc::Client,
-) -> std::result::Result<(), gpio_cdev::Error> {
-    let mut chip = Chip::new("/dev/gpiochip0")?;
+fn switch_handling(pin: u32, mqtt_client: &mut rumqttc::Client) -> GpioResult {
+    set_pull_up_down(pin, Pud::UP)?;
+    set_mode(pin, GpioMode::INPUT)?;
+    // Always publish the initial state at startup
+    let mut last = read(pin)?;
+    new_door_state(last == 0, mqtt_client);
 
-    let pin_line = chip.get_line(pin)?;
-
-    for event in pin_line.events(
-        LineRequestFlags::OPEN_SOURCE, // LineRequestFlag INPUT wäre ohne pullup, was hier gebraucht wird
-        EventRequestFlags::BOTH_EDGES,
-        "monitor",
-    )? {
-        println!("{:?}", event?);
+    loop {
+        thread::sleep(std::time::Duration::from_secs(5));
+        if let Ok(new) = read(pin) {
+            if new != last {
+                new_door_state(new == 0, mqtt_client);
+                last = new;
+            }
+        };
     }
-    Ok(())
 }
 
 /// Shortcut to get current system unixtime as u64

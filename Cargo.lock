@@ -205,9 +205,9 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "clap",
- "gpio-cdev",
  "regex",
  "rumqttc",
+ "rust-pigpio",
  "serde",
  "serde_json",
  "spaceapi",
@@ -319,17 +319,6 @@ dependencies = [
  "cfg-if 0.1.10",
  "libc",
  "wasi 0.9.0+wasi-snapshot-preview1",
-]
-
-[[package]]
-name = "gpio-cdev"
-version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da59d440ef8c26208b3960ed58b71b896db7dfd6bb138622bba733b66d978c3a"
-dependencies = [
- "bitflags",
- "libc",
- "nix",
 ]
 
 [[package]]
@@ -474,19 +463,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "15988061c9e6feb86fdb7cc01df1ede5a8bd765ebf9f085fe3f13751e6ea95af"
 dependencies = [
  "bytes 0.6.0",
-]
-
-[[package]]
-name = "nix"
-version = "0.14.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c722bee1037d430d0f8e687bbdbf222f27cc6e4e68d5caf630857bb2b6dbdce"
-dependencies = [
- "bitflags",
- "cc",
- "cfg-if 0.1.10",
- "libc",
- "void",
 ]
 
 [[package]]
@@ -750,6 +726,12 @@ dependencies = [
  "webpki",
  "ws_stream_tungstenite",
 ]
+
+[[package]]
+name = "rust-pigpio"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5e42cf7e4445497bbdcf7e8a6cdef2b51c51f95c2c8744c934d029a1719c77f8"
 
 [[package]]
 name = "rustc_version"
@@ -1152,12 +1134,6 @@ name = "version_check"
 version = "0.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b5a972e5669d67ba988ce3dc826706fb0a8b01471c088cb0b6110b805cc36aed"
-
-[[package]]
-name = "void"
-version = "1.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6a02e4885ed3bc0f2de90ea6dd45ebcbb66dacffe03547fadbb0eeae2770887d"
 
 [[package]]
 name = "wasi"
