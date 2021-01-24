@@ -1,4 +1,4 @@
 pmwikipath="/foo/bar/"
 mqtt_broker="broker.hivemq.com"
 mqtt_topic="door"
-additional_flags="-s 17" # Set things like switch or broker port here
+additional_flags="" # Set things like switch or broker port here
